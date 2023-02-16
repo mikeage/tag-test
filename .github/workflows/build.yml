@@ -157,3 +157,68 @@ jobs:
           echo "fromTag=${fromTag}"
           echo "tag_name=${tag_name}"
           echo "toTag=${toTag}"
+  release:
+    name: Create Github Release
+    needs: [configuration, build]
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/v'))
+
+    steps:
+      - name: "Build Changelog"
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v3.6.0
+        with:
+          fromTag: "${{ needs.configuration.outputs.previousrelease }}"
+          toTag: "${{ needs.configuration.outputs.currentrelease }}"
+          configurationJson: |
+            {
+              "categories": [
+                {
+                    "title": "## 🚀 Features",
+                    "labels": ["feature", "enhancement"]
+                },
+                {
+                    "title": "## 🐛 Fixes",
+                    "labels": ["fix", "bugfix"]
+                },
+                {
+                    "title": "## 🛠️ Infrastructure",
+                    "labels": ["infrastructure"]
+                },
+                {
+                    "title": "## 📦 Dependencies / Maintenance",
+                    "labels": ["dependencies", "maintenance"]
+                },
+                {
+                    "title": "## 💬 Uncategorized",
+                    "labels": []
+                }
+              ]
+            }
+
+      - name: Echo Changelog (for debugging purposes)
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+        run: echo "$CHANGELOG"
+
+      - name: Package Artifacts for release
+        env:
+          VERSION: ${{ needs.configuration.outputs.version }}
+        run: |
+          mkdir releases
+          cd releases
+          touch OpenBrush_Desktop_$VERSION.zip
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: ${{ steps.changelog.outputs.changelog }}
+          prerelease: ${{ needs.configuration.outputs.prerelease }}
+          tag_name: ${{ needs.configuration.outputs.version }}
+          files: releases/*
+
+
