@@ -68,7 +68,7 @@ jobs:
           #   c...c0..c1....c3.........m6..c7....c10.c11.....m13...c14 <- [main]
           #       ^                         \               /
           #    (v2.0)                        \-c8..c9..c12-/
-          # If we use --first-parent, it wouldn't find a tag that was not a first parent, and so it'll think we're now in 2.0.8, though it skips the commits on the branches. If we did not use --first-parent, it gets the proper tag (v2.1), but counts each commit in the feature branch, and gives 2.1.9. While we almost always squash, if we ever do have an explicit merge commit, we don't want to count the commits on the feature branch. In this case, we actually want to get 2.1.4
+          # If we use --first-parent, it wouldn't find a tag that was not a first parent, and so it'll think we're now in 2.0.8, though it skips the commits on the branches. If we did not use --first-parent, it gets the proper tag (v2.1), but counts each commit in the feature branch, and gives 2.1.10. While we almost always squash, if we ever do have an explicit merge commit, we don't want to count the commits on the feature branch. In this case, we actually want to get 2.1.7 (commits c3, m6, c7, c10, c11, m13, and c14).
           ######## OLD CODE ########
           # # If the value is not equal to zero, git describe will give us a version in the form vX.Y-Z-gAAAAAAA, where Z is the count. If the current commit has a vX.Y tag, it'll just return that, so the 'cut' does nothing. We test for this below
           # PATCH_VERSION=$(git describe --tags --match "v[0-9]*.[0-9]*" --first-parent ${{ github.event.pull_request.head.sha }} | cut -d'-' -f2)
