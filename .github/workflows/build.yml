@@ -209,7 +209,9 @@ jobs:
         run: |
           mkdir releases
           cd releases
-          touch OpenBrush_Desktop_$VERSION.zip
+          touch OpenBrush_Desktop_$VERSION.exe
+          zip OpenBrush_Desktop_$VERSION.zip *.exe
+          rm *.exe
 
       - name: Publish
         uses: softprops/action-gh-release@v1
