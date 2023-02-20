@@ -219,7 +219,7 @@ jobs:
                 }
               ]
               ,
-              "pr_template": "- PR ##{{NUMBER}}: #{{TITLE}} by #{{AUTHOR}}"
+              "pr_template": "- #{{TITLE}} (PR ##{{NUMBER}} by #{{AUTHOR}})"
             }
 
       - name: Echo Changelog (for debugging purposes)
