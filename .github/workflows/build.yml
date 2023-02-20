@@ -218,8 +218,8 @@ jobs:
                     "labels": []
                 }
               ]
-              # ,
-              # pr_template": "- PR ##{{NUMBER}}: #{{TITLE}} by #{{AUTHOR}}"
+              ,
+              "pr_template": "- PR ##{{NUMBER}}: #{{TITLE}} by #{{AUTHOR}}"
             }
 
       - name: Echo Changelog (for debugging purposes)
